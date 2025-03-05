@@ -1,25 +1,824 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Pages 테스트</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-        }
-        h1 {
-            color: #333;
-        }
-    </style>
+	<meta charset="utf-8">
+	<meta name="generator" content="Hugo 0.88.1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href=""https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
+	<link rel="stylesheet" href="css/custom.css">
+	<link rel="stylesheet" href="css/normalize.css">
+
+	<title>A-DMA</title>
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+
 </head>
-<body>
-    <h1>test file</h1>
+
+
+<body data-new-gr-c-s-check-loaded="14.1091.0" data-gr-ext-installed="">
+
+<div class="container" >
+<header role="banner">
+</header>
+<main role="main">
+<article itemscope itemtype="https://schema.org/BlogPosting">
+
+<div class="container pt-5 mt-5 shadow-lg p-5 mb-5 bg-white rounded">
+	<div class="text-center">
+		<h4>Accelerating Diffusion-based Text-to-Speech Model Training with Multimodal Representation Distillation</h4>
+		<p class="fst-italic mb-0">
+			Anonymous submission to Interspeech 2025
+		</p>
+		<br>
+	</div>
+	<p>
+        <b>Abstract.</b>
+		The goal of this paper is to optimize the training process of diffusion-based text-to-speech models. While recent studies have achieved remarkable advancements, their trainings demand substantial time and computational costs, largely due to the implicit guidance of diffusion models in learning complex intermediate representations. To address this, we propose A-DMA, an effective strategy for Accelerating training with Dual Modality Alignment. Our method introduces a novel alignment pipeline leveraging both text and speech modalities: text-guided alignment, which incorporates contextual representations, and speech-guided alignment, which refines semantic representations. By aligning hidden states with discriminative features, our training scheme reduces the reliance on diffusion models for learning complex representations. Extensive experiments demonstrate that A-DMA doubles the convergence speed while achieving superior performance over baselines.
+	</p>
+	<p>
+		<b>Contents</b>
+		<ul>
+			<li><a href="#model-overview">Model Overview</a></li>
+			<li><a href="#training-steps">Performance over Training Steps</a></li>
+			<li><a href="#model-comparison">Model Comparison</a></li>
+    	</ul>
+	</p>	
+</div>
+
+
+<div class="container pt-5 mt-5 shadow-lg p-5 mb-5 bg-white rounded">
+	<h2 id="model-overview" style="text-align: center;">Model Overview</h2>
+	<body>
+	<p style="text-align: center;">
+		<img src="pics/overview.png" height="600" width="600">
+	</p>
+	</body>
+	<p style="text-align: center;" >
+		<b>Figure 1.</b> Overall training framework. The model uses masked speech, noisy speech, and transcript to predict the masked part of the speech via flow matching. The SSL model and CTC layer are utilized only during training, with the SSL parameters frozen throughout the process.
+	</p>
+</div>
+
+<div class="container pt-5 mt-5 shadow-lg p-5 mb-5 bg-white rounded">
+	<h2 id="training-steps" style="text-align: center;">Performance over Training Steps</h2>
+	<body>
+	<p style="text-align: center;">
+		<img src="pics/graph.png" height="300" width="600">
+	</p>
+	</body>
+	<p style="text-align: center;" >
+		<b>Figure 2.</b> The WER and SIM results showing the effectiveness of the proposed dual modality alignment.
+	</p>
+	<br>
+	<p>* Each text below each audio is ASR transcribed and normalized.</p>
+	<br>
+	<h5>Text: And to think we can save all that misery and despair by the payment of a hundred and fifty dollars!</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">Training Steps</th>
+					<th style="text-align: center">F5-TTS<br>+ A-DMA (Ours)</th>
+					<th style="text-align: center">F5-TTS</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td rowspan="4" style="vertical-align: middle; text-align: center">
+						<audio controls="controls" style="width: 200px;"><source src="audios/ref/6829-68769-0053.wav" autoplay/>Your browser does not support the audio element.</audio>
+						<p></p>
+						</td>
+					<td rowspan="4" style="vertical-align: middle; text-align: center">
+						<audio controls="controls" style="width: 200px;"><source src="audios/GT/6829-68769-0053.wav" autoplay/>Your browser does not support the audio element.</audio>
+						<p>and to think we can save all that misery and despair by the payment of a hundred and fifty dollars</p>
+						</td>
+					<td style="vertical-align: middle; text-align: center">
+							<p>100k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-100k/6829-68769-0053.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>and to think we can save all that misery and despair by the payment of a hundred and fifty dollars</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-100k/6829-68769-0053.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>and to think <span style="color:red;">when</span> <span style="color: red; font-style: italic;">(missing)</span> save all <span style="color:red;">those re a</span> despair <span style="color:red;">and</span> <span style="color:red;">disbam a</span> payment of <span style="color: red; font-style: italic;">(missing)</span> hundred and fifty dollars</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<p>200k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-200k/6829-68769-0053.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>and to think we can save all that misery and despair by the payment of a hundred and fifty dollars</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-200k/6829-68769-0053.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>and to think we can save all that misery and despair by <span style="color: red; font-style: italic;">(missing)</span> payment of a hundred and fifty dollars</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<p>300k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-300k/6829-68769-0053.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>and to think we can save all that misery and despair by the payment of a hundred and fifty dollars</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-300k/6829-68769-0053.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>and to think we can save all that misery and despair by the payment of a hundred and fifty dollars</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<p>400k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-400k/6829-68769-0053.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>and to think we can save all that misery and despair by the payment of a hundred and fifty dollars</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-400k/6829-68769-0053.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>and to think we can save all that <span style="color:red;">miserisery</span> and despair by the payment of a hundred and fifty dollars</p>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+	<h5>Text: Why, it's Goliath as usual! they both cried, peering in.</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">Training Steps</th>
+					<th style="text-align: center">F5-TTS<br>+ A-DMA (Ours)</th>
+					<th style="text-align: center">F5-TTS</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td rowspan="4" style="vertical-align: middle; text-align: center">
+						<audio controls="controls" style="width: 200px;"><source src="audios/ref/6930-76324-0025.wav" autoplay/>Your browser does not support the audio element.</audio>
+						<p></p>
+						</td>
+					<td rowspan="4" style="vertical-align: middle; text-align: center">
+						<audio controls="controls" style="width: 200px;"><source src="audios/GT/6930-76324-0025.wav" autoplay/>Your browser does not support the audio element.</audio>
+						<p>why its goliath as usual they both cried peering in</p>
+						</td>
+					<td style="vertical-align: middle; text-align: center">
+							<p>100k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-100k/6930-76324-0025.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>why its goliath as usual they both cried peering in</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-100k/6930-76324-0025.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>why its <span style="color:red;">goleth</span> as usual <span style="color:red;">thoth</span> <span style="color: red; font-style: italic;">(missing)</span> cried peering in</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<p>200k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-200k/6930-76324-0025.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>why its goliath as usual they both cried peering in</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-200k/6930-76324-0025.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>why its goliath as usual they both cried peering in</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<p>300k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-300k/6930-76324-0025.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>why its goliath as usual they both cried peering in</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-300k/6930-76324-0025.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p><span style="color:red;">wide</span> <span style="color:red;">scull i ath</span> as usual they both cried peering in</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<p>400k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-400k/6930-76324-0025.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>why its goliath as usual they both cried peering in</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-400k/6930-76324-0025.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>why its goliath as usual they both cried peering in</p>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+	<h5>Text: The first of our vague but indubitable data is that there is knowledge of the past.</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">Training Steps</th>
+					<th style="text-align: center">F5-TTS<br>+ A-DMA (Ours)</th>
+					<th style="text-align: center">F5-TTS</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td rowspan="4" style="vertical-align: middle; text-align: center">
+						<audio controls="controls" style="width: 200px;"><source src="audios/ref/8230-279154-0024.wav" autoplay/>Your browser does not support the audio element.</audio>
+						<p></p>
+						</td>
+					<td rowspan="4" style="vertical-align: middle; text-align: center">
+						<audio controls="controls" style="width: 200px;"><source src="audios/GT/8230-279154-0024.wav" autoplay/>Your browser does not support the audio element.</audio>
+						<p>the first of our vague but indubitable data is that there is knowledge of the past</p>
+						</td>
+					<td style="vertical-align: middle; text-align: center">
+							<p>100k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-100k/8230-279154-0024.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>the first of our vague but indubitable data is that there is knowledge of the past</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-100k/8230-279154-0024.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>the first of our <span style="color:red;">very</span> vague <span style="color:red;">doodledata</span> <span style="color: red; font-style: italic;">(missing)</span> that there is knowledge of the past</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<p>200k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-200k/8230-279154-0024.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>the first of our vague but indubitable data is that there is knowledge of the past</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-200k/8230-279154-0024.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>the first of our vague but indubitable data is that there is knowledge of the past</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<p>300k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-300k/8230-279154-0024.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>the first of our vague but indubitable data is that there is knowledge of the past</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-300k/8230-279154-0024.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>the first of our vague but indubitable data is that there is knowledge of the past</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<p>400k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-400k/8230-279154-0024.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>the first of our vague but indubitable data is that there is knowledge of the past</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-400k/8230-279154-0024.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>the first of our vague but indubitable data is that there is knowledge of the past</p>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+	<h5>Text: It has no beauty whatsoever, no specialty of picturesqueness; and all its lines are cramped and poor.</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">Training Steps</th>
+					<th style="text-align: center">F5-TTS<br>+ A-DMA (Ours)</th>
+					<th style="text-align: center">F5-TTS</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td rowspan="4" style="vertical-align: middle; text-align: center">
+						<audio controls="controls" style="width: 200px;"><source src="audios/ref/1188-133604-0039.wav" autoplay/>Your browser does not support the audio element.</audio>
+						<p></p>
+						</td>
+					<td rowspan="4" style="vertical-align: middle; text-align: center">
+						<audio controls="controls" style="width: 200px;"><source src="audios/GT/1188-133604-0039.wav" autoplay/>Your browser does not support the audio element.</audio>
+						<p>it has no beauty whatsoever no specialty of picturesqueness and all its lines are cramped and poor</p>
+						</td>
+					<td style="vertical-align: middle; text-align: center">
+							<p>100k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-100k/1188-133604-0039.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>it has no beauty whatsoever no <span style="color:red;">specially</span> of picturesqueness and all its lines are cramped and poor</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-100k/1188-133604-0039.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>it has no <span style="color:red;">divided</span> <span style="color:red;">of her</span> no <span style="color:red;">special trisquinus</span> <span style="color: red; font-style: italic;">(missing)</span> and all its <span style="color:red;">line crumped</span> <span style="color: red; font-style: italic;">(missing)</span> and poor</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<p>200k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-200k/1188-133604-0039.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>it has no beauty whatsoever no specialty of picturesqueness and all its lines are cramped and poor</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-200k/1188-133604-0039.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>it has no beauty whatsoever no <span style="color:red;">specie</span> of picturesqueness and all its lines are cramped and poor</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<p>300k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-300k/1188-133604-0039.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>it has no beauty whatsoever no specialty of picturesqueness and all its lines are cramped and poor</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-300k/1188-133604-0039.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>it has no beauty whatsoever no <span style="color:red;">specie</span> of picturesqueness and all its lines are cramped and poor</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<p>400k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-400k/1188-133604-0039.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>it has no beauty whatsoever no specialty of picturesqueness and all its lines are cramped and poor</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-400k/1188-133604-0039.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>it has no beauty whatsoever no <span style="color:red;">specie</span> of picturesqueness and all its lines are cramped and poor</p>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+	<h5>Text: Do you know?' 'Lake? Oh! I really can't tell; but he'll soon tire of country life.</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">Training Steps</th>
+					<th style="text-align: center">F5-TTS<br>+ A-DMA (Ours)</th>
+					<th style="text-align: center">F5-TTS</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td rowspan="4" style="vertical-align: middle; text-align: center">
+						<audio controls="controls" style="width: 200px;"><source src="audios/ref/5683-32865-0013.wav" autoplay/>Your browser does not support the audio element.</audio>
+						<p></p>
+						</td>
+					<td rowspan="4" style="vertical-align: middle; text-align: center">
+						<audio controls="controls" style="width: 200px;"><source src="audios/GT/5683-32865-0013.wav" autoplay/>Your browser does not support the audio element.</audio>
+						<p>do you know lake oh i really cant tell but hell soon tire of country life</p>
+						</td>
+					<td style="vertical-align: middle; text-align: center">
+							<p>100k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-100k/5683-32865-0013.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>do you know <span style="color: red; font-style: italic;">(missing)</span> oh i really cant tell but hell soon tire of country life</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-100k/5683-32865-0013.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>do you know <span style="color: red; font-style: italic;">(missing)</span> i really cant tell but hell soon tire of country life</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<p>200k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-200k/5683-32865-0013.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>do you know <span style="color: red; font-style: italic;">(missing)</span> oh i really cant tell but hell soon tire of country life</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-200k/5683-32865-0013.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>do you know <span style="color: red; font-style: italic;">(missing)</span> i really cant tell but hell soon tire of country life</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<p>300k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-300k/5683-32865-0013.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>do you know lake oh i really cant tell but hell soon tire of country life</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-300k/5683-32865-0013.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>do you know lake <span style="color: red; font-style: italic;">(missing)</span> i really cant tell but hell soon tire of country life</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<p>400k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-400k/5683-32865-0013.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>do you know lake oh i really cant tell but hell soon tire of country life</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-400k/5683-32865-0013.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>do you know <span style="color: red; font-style: italic;">(missing)</span> oh i really cant tell but hell soon tire of country life</p>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+	<h5>Text: As regards my robbing the company, I'll say that I saved them a heavy loss one day.</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">Training Steps</th>
+					<th style="text-align: center">F5-TTS<br>+ A-DMA (Ours)</th>
+					<th style="text-align: center">F5-TTS</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td rowspan="4" style="vertical-align: middle; text-align: center">
+						<audio controls="controls" style="width: 200px;"><source src="audios/ref/6829-68769-0031.wav" autoplay/>Your browser does not support the audio element.</audio>
+						<p></p>
+						</td>
+					<td rowspan="4" style="vertical-align: middle; text-align: center">
+						<audio controls="controls" style="width: 200px;"><source src="audios/GT/6829-68769-0031.wav" autoplay/>Your browser does not support the audio element.</audio>
+						<p>as regards my robbing the company ill say that i saved <span style="color:red;">him</span> a heavy loss one day</p>
+						</td>
+					<td style="vertical-align: middle; text-align: center">
+							<p>100k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-100k/6829-68769-0031.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>as regards my robbing the company ill say that i saved them a heavy loss one day</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-100k/6829-68769-0031.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>as <span style="color:red;">regarding</span> <span style="color: red; font-style: italic;">(missing)</span> robbing the company ill say <span style="color:red;">they</span> <span style="color: red; font-style: italic;">(missing)</span> saved them a heavy loss one day</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<p>200k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-200k/6829-68769-0031.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>as regards my robbing the company ill say that i saved them a heavy loss one day</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-200k/6829-68769-0031.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>as regards my robbing the company ill say that i saved them a heavy loss one day</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<p>300k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-300k/6829-68769-0031.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>as regards my robbing the company ill say that i saved them a heavy loss one day</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-300k/6829-68769-0031.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>as regards my robbing the company ill say that i saved them a heavy loss one day</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<p>400k</p>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5_DMA-400k/6829-68769-0031.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>as regards my robbing the company ill say that i saved them a heavy loss one day</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+								<audio controls="controls" style="width: 200px;"><source src="audios/F5-400k/6829-68769-0031.wav" autoplay/>Your browser does not support the audio element.</audio>
+								<p>as regards my robbing the company ill say that i saved them a heavy loss one day</p>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="container pt-5 mt-5 shadow-lg p-5 mb-5 bg-white rounded">
+	<h2 id="model-comparison" style="text-align: center;">Model Comparison</h2>
+	<br>
+	<p>* Each text below each audio is ASR transcribed and normalized.</p>
+	<br>
+	<h5>Text: And to think we can save all that misery and despair by the payment of a hundred and fifty dollars!</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">F5-TTS<br>+ A-DMA (Ours)</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">E2-TTS<br>+ A-DMA (Ours)</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">USLM</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/ref/6829-68769-0053.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/GT/6829-68769-0053.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>and to think we can save all that misery and despair by the payment of a hundred and fifty dollars</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/F5_DMA-400k/6829-68769-0053.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>and to think we can save all that misery and despair by the payment of a hundred and fifty dollars</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/F5-400k/6829-68769-0053.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>and to think we can save all that <span style="color:red;">miserisery</span> and despair by the payment of a hundred and fifty dollars</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/E2_DMA-400k/6829-68769-0053.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>and to think we can save all that misery and despair by the payment of a hundred and fifty dollars</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/E2-400k/6829-68769-0053.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>and to think we can save all that misery and despair by the payment of a hundred and fifty dollars</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/USLM/6829-68769-0053.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>and to think we can save all that misery and despair by the payment of a hundred and fifty dollars</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+	<h5>Text: Why, it's Goliath as usual! they both cried, peering in.</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">F5-TTS<br>+ A-DMA (Ours)</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">E2-TTS<br>+ A-DMA (Ours)</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">USLM</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/ref/6930-76324-0025.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/GT/6930-76324-0025.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>why its goliath as usual they both cried peering in</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/F5_DMA-400k/6930-76324-0025.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>why its goliath as usual they both cried peering in</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/F5-400k/6930-76324-0025.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>why its goliath as usual they both cried peering in</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/E2_DMA-400k/6930-76324-0025.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>why its goliath as usual they both cried peering in</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/E2-400k/6930-76324-0025.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>why its goliath as <span style="color:red;">you</span> <span style="color:red;">will</span> they both cried peering in</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/USLM/6930-76324-0025.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>why its <span style="color:red;">goliaths jewel</span> <span style="color: red; font-style: italic;">(missing)</span> they both cried peering in</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+	<h5>Text: The first of our vague but indubitable data is that there is knowledge of the past.</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">F5-TTS<br>+ A-DMA (Ours)</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">E2-TTS<br>+ A-DMA (Ours)</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">USLM</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/ref/8230-279154-0024.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/GT/8230-279154-0024.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>the first of our vague but indubitable data is that there is knowledge of the past</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/F5_DMA-400k/8230-279154-0024.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>the first of our vague but indubitable data is that there is knowledge of the past</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/F5-400k/8230-279154-0024.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>the first of our vague but indubitable data is that there is knowledge of the past</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/E2_DMA-400k/8230-279154-0024.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>the first of our vague but indubitable data is that there is knowledge of the past</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/E2-400k/8230-279154-0024.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>the first of our vague but indubitable data is that there is knowledge of the past</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/USLM/8230-279154-0024.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>the first of our vague but indubitable data is that there is knowledge of the past</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<h5>Text: It has no beauty whatsoever, no specialty of picturesqueness; and all its lines are cramped and poor.</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">F5-TTS<br>+ A-DMA (Ours)</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">E2-TTS<br>+ A-DMA (Ours)</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">USLM</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/ref/1188-133604-0039.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/GT/1188-133604-0039.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>it has no beauty whatsoever no specialty of picturesqueness and all its lines are cramped and poor</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/F5_DMA-400k/1188-133604-0039.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>it has no beauty whatsoever no specialty of picturesqueness and all its lines are cramped and poor</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/F5-400k/1188-133604-0039.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>it has no beauty whatsoever no <span style="color:red;">specie</span> of picturesqueness and all its lines are cramped and poor</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/E2_DMA-400k/1188-133604-0039.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>it has no beauty whatsoever no specialty of picturesqueness and all its lines are cramped and poor</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/E2-400k/1188-133604-0039.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>it has no beauty whatsoever no specialty of picturesqueness and all its lines are cramped and poor</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/USLM/1188-133604-0039.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>it has no beauty whatsoever no <span style="color:red;">specially</span> of picturesqueness and all its lines are cramped and poor</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+	<h5>Text: Do you know?' 'Lake? Oh! I really can't tell; but he'll soon tire of country life.</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">F5-TTS<br>+ A-DMA (Ours)</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">E2-TTS<br>+ A-DMA (Ours)</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">USLM</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/ref/5683-32865-0013.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/GT/5683-32865-0013.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>do you know lake oh i really cant tell but hell soon tire of country life</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/F5_DMA-400k/5683-32865-0013.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>do you know lake oh i really cant tell but hell soon tire of country life</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/F5-400k/5683-32865-0013.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>do you know <span style="color: red; font-style: italic;">(missing)</span> oh i really cant tell but hell soon tire of country life</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/E2_DMA-400k/5683-32865-0013.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>do you know lake oh i really cant tell but hell soon tire of country life</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/E2-400k/5683-32865-0013.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>do you know lake oh i really cant tell but hell soon tire of country life</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/USLM/5683-32865-0013.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>do you know lake <span style="color:red;">oi</span> <span style="color: red; font-style: italic;">(missing)</span> really cant tell but hell soon tire of country life</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+	<h5>Text: As regards my robbing the company, I'll say that I saved them a heavy loss one day.</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">F5-TTS<br>+ A-DMA (Ours)</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">E2-TTS<br>+ A-DMA (Ours)</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">USLM</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/ref/6829-68769-0031.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/GT/6829-68769-0031.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>as regards my robbing the company ill say that i saved <span style="color:red;">him</span> a heavy loss one day</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/F5_DMA-400k/6829-68769-0031.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>as regards my robbing the company ill say that i saved them a heavy loss one day</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/F5-400k/6829-68769-0031.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>as regards my robbing the company ill say that i saved them a heavy loss one day</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/E2_DMA-400k/6829-68769-0031.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>as regards my robbing the company ill say that i saved them a heavy loss one day</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/E2-400k/6829-68769-0031.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>as regards my robbing the company ill say that i saved them a heavy loss one day</p>
+					</td>
+					<td style="vertical-align: middle; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios/USLM/6829-68769-0031.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>as <span style="color:red;">you</span> <span style="color:red;">gods</span> my <span style="color:red;">robin</span> the company ill say that i saved them a heavy loss one day</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+</article>
+</main>
+</div>
+
 </body>
 </html>
